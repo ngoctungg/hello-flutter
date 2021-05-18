@@ -2,7 +2,21 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  int questionIndex = 0;
+  var questions = ["A", "B"];
+  void answerQuestion() {
+    if (this.questionIndex == questions.length - 1) return;
+    setState(() {
+      this.questionIndex = this.questionIndex + 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,9 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Text("What is L0 scramhing softw"),
+            Text(this.questions[this.questionIndex]),
             RaisedButton(
-              onPressed: () => {},
+              onPressed: answerQuestion,
               child: Text("btn1"),
             ),
             RaisedButton(
