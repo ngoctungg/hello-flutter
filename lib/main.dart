@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'question.dart';
+import './answer.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,12 +10,21 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  int questionIndex = 0;
-  var questions = ["A", "B"];
+  int _questionIndex = 0;
+  var _questions = [
+    {
+      'questionText': 'BuildContext',
+      'answer': ['A', 'B', 'C', 'D']
+    },
+    {
+      'questionText': 'BuildContext2',
+      'answer': ['A', 'B']
+    }
+  ];
   void answerQuestion() {
-    if (this.questionIndex == questions.length - 1) return;
+    if (this._questionIndex == _questions.length - 1) return;
     setState(() {
-      this.questionIndex = this.questionIndex + 1;
+      this._questionIndex = this._questionIndex + 1;
     });
   }
 
@@ -26,18 +37,20 @@ class MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Text(this.questions[this.questionIndex]),
-            RaisedButton(
-              onPressed: answerQuestion,
-              child: Text("btn1"),
-            ),
-            RaisedButton(
-              onPressed: () => {},
-              child: Text("btn1"),
-            ),
-            ElevatedButton(
-              onPressed: () => {},
-              child: Text("btn1"),
+            Question(this._questions[this._questionIndex]['questionText']),
+            ...(this._questions[this._questionIndex]['answer'] as List<String>)
+                .map((e) => Answer(e, answerQuestion)),
+            // Answer("Answer 1", answerQuestion),
+            // Answer("Answer 2", answerQuestion),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 10, right: 10),
+              child: ElevatedButton(
+                onPressed: () => {},
+                child: Text("btn1"),
+                style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(Colors.amber)),
+              ),
             ),
           ],
         ),
