@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'question.dart';
-import './answer.dart';
+import 'package:hello_flutter/quiz.dart';
+import 'package:hello_flutter/result.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,18 +11,36 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   int _questionIndex = 0;
-  var _questions = [
+  final _questions = [
     {
       'questionText': 'BuildContext',
-      'answer': ['A', 'B', 'C', 'D']
+      'answer': [
+        {'text': 'A', 'score': 1},
+        {'text': 'B', 'score': 2},
+        {'text': 'C', 'score': 3},
+        {'text': 'D', 'score': 4}
+      ]
     },
     {
       'questionText': 'BuildContext2',
-      'answer': ['A', 'B']
+      'answer': [
+        {'text': 'A', 'score': 5},
+        {'text': 'B', 'score': 6},
+      ]
     }
   ];
-  void answerQuestion() {
-    if (this._questionIndex == _questions.length - 1) return;
+
+  int _totalScore = 0;
+
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
+    this._totalScore += score;
     setState(() {
       this._questionIndex = this._questionIndex + 1;
     });
@@ -35,25 +53,12 @@ class MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('HELLO WORLD'),
         ),
-        body: Column(
-          children: [
-            Question(this._questions[this._questionIndex]['questionText']),
-            ...(this._questions[this._questionIndex]['answer'] as List<String>)
-                .map((e) => Answer(e, answerQuestion)),
-            // Answer("Answer 1", answerQuestion),
-            // Answer("Answer 2", answerQuestion),
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.only(left: 10, right: 10),
-              child: ElevatedButton(
-                onPressed: () => {},
-                child: Text("btn1"),
-                style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(Colors.amber)),
-              ),
-            ),
-          ],
-        ),
+        body: this._questionIndex < this._questions.length
+            ? Quiz(
+                questions: _questions,
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex)
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }
